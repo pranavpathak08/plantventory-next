@@ -13,21 +13,26 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import { Combobox } from "./ui/combo-box";
 import { Input } from "./ui/input";
+import { getPlants } from "@/actions/plant.action";
   
-const plants = [
-    {
-        id: "INV001",
-        name: "Cactus",
-        category: "idk",
-        price: "$250.00",
-        stock: 10
-    }
-]
+
+type Plant = Awaited<ReturnType<typeof getPlants>>;
+
+interface InventoryTableProps {
+    plants: Plant
+}
     
   
-export default function InventoryTable() {
+export default async function InventoryTable({plants} : InventoryTableProps) {
 
-    const [selectedCategory, setSelectedCategory] = useState("")
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    //Filtering plants by name and category (if selected)
+    const filteredPlants = plants?.userPlants?.filter((plant) => (
+        plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (selectedCategory === "" || plant.category === selectedCategory)
+    ));
 
     return (
         <div className="w-full">
@@ -36,6 +41,9 @@ export default function InventoryTable() {
                     <Input
                         placeholder="Filter plants..."
                         className="pl-10"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+
                     />
                     <Search className="absolute h-4 w-w4 left-3 top-1/2 transform -translate-y-1/2" />
                 </div>
@@ -60,7 +68,7 @@ export default function InventoryTable() {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {plants.map((plant) => (
+                {filteredPlants?.map((plant) => (
                     <TableRow key={plant.id}>
                         <TableCell>{plant.id}</TableCell>
                         <TableCell>{plant.name}</TableCell>
@@ -79,7 +87,6 @@ export default function InventoryTable() {
             </TableBody>
         </Table>
         </div>
-        
     );
 }
   
