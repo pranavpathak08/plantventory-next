@@ -23,7 +23,7 @@ interface InventoryTableProps {
 }
     
   
-export default async function InventoryTable({plants} : InventoryTableProps) {
+export default function InventoryTable({plants} : InventoryTableProps) {
 
     const [selectedCategory, setSelectedCategory] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +31,9 @@ export default async function InventoryTable({plants} : InventoryTableProps) {
     //Filtering plants by name and category (if selected)
     const filteredPlants = plants?.userPlants?.filter((plant) => (
         plant.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedCategory === "" || plant.category === selectedCategory)
+        (selectedCategory === "" || plant.category.toLowerCase() === selectedCategory.toLowerCase())
+
+        // console.log(`Plant: ${plant.name}, Category: "${plant.category}", Selected: "${selectedCategory}", Match: ${categoryMatch}`);
     ));
 
     return (
@@ -39,13 +41,13 @@ export default async function InventoryTable({plants} : InventoryTableProps) {
             <div className="flex items-center gap-2 py-4">
                 <div className="relative max-w-sm w-full">
                     <Input
-                        placeholder="Filter plants..."
+                        placeholder="Filter plants by name..."
                         className="pl-10"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
 
                     />
-                    <Search className="absolute h-4 w-w4 left-3 top-1/2 transform -translate-y-1/2" />
+                    <Search className="absolute h-4 w-4 left-3 top-1/2 transform -translate-y-1/2" />
                 </div>
 
                 <Combobox
