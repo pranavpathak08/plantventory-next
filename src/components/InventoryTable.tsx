@@ -16,6 +16,7 @@ import { Input } from "./ui/input";
 import { getPlants } from "@/actions/plant.action";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "./ui/skeleton";
+import CreateDialog from "./CreateDialog"
   
 
 type Plant = Awaited<ReturnType<typeof getPlants>>;
@@ -116,7 +117,7 @@ export default function InventoryTable({plants} : InventoryTableProps) {
                     value={selectedCategory}
                     onChange={(val) => setSelectedCategory(val)}
                 />
-
+                <CreateDialog />
 
             </div>
 
