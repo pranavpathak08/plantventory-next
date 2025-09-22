@@ -15,6 +15,7 @@ import { Combobox } from "./ui/combo-box";
 import { Input } from "./ui/input";
 import { getPlants } from "@/actions/plant.action";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "./ui/skeleton";
   
 
 type Plant = Awaited<ReturnType<typeof getPlants>>;
@@ -36,6 +37,66 @@ export default function InventoryTable({plants} : InventoryTableProps) {
 
         // console.log(`Plant: ${plant.name}, Category: "${plant.category}", Selected: "${selectedCategory}", Match: ${categoryMatch}`);
     ));
+
+    if (!plants) {
+        return (
+            <div className="w-full space-y-4">
+              <div className="flex items-center gap-2 py-4">
+                <Skeleton className="h-10 w-full max-w-sm" />
+                <Skeleton className="h-10 w-32" />
+                <Skeleton className="h-10 w-32" />
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>
+                      <Skeleton className="w-full h-4" />
+                    </TableHead>
+                    <TableHead>
+                      <Skeleton className="w-full h-4" />
+                    </TableHead>
+                    <TableHead>
+                      <Skeleton className="w-full h-4" />
+                    </TableHead>
+                    <TableHead>
+                      <Skeleton className="w-full h-4" />
+                    </TableHead>
+                    <TableHead>
+                      <Skeleton className="w-full h-4" />
+                    </TableHead>
+                    <TableHead className="text-right">
+                      <Skeleton className="w-full h-4" />
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <TableRow key={i}>
+                      <TableCell>
+                        <Skeleton className="w-full h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-full h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-full h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-full h-4" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="w-full h-4" />
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Skeleton className="w-full h-4" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          );
+    }
 
     return (
         <div className="w-full">
@@ -76,9 +137,13 @@ export default function InventoryTable({plants} : InventoryTableProps) {
                         const slugifiedName = plant.name.toLowerCase().replace(/\s+/g, "-");
                         const slug = `${plant.id}--${slugifiedName}`;
                         const plantUrl = `/plants/${slug}`;
+
+                        const handleClick = () => {
+                            router.push(plantUrl);
+                        }
                         
                         return (
-                            <TableRow key={plant.id} onClick={() => router.push(plantUrl)}>
+                            <TableRow key={plant.id} onClick={handleClick}>
                                 <TableCell>{plant.id}</TableCell>
                                 <TableCell>{plant.name}</TableCell>
                                 <TableCell>{plant.category}</TableCell>
