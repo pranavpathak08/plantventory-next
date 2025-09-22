@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { getUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 export async function getPlants(searchTerm?: String) {
     try {
@@ -23,7 +24,7 @@ export async function getPlants(searchTerm?: String) {
             where: whereClause 
         })
         
-        // revalidatePath("/");
+        revalidatePath("/");
         return { success: true, userPlants }; 
 
     } catch (error) {
@@ -31,3 +32,10 @@ export async function getPlants(searchTerm?: String) {
         throw new Error("Failed to fetch plants");
     }
 }
+
+export async function getPlantById(id: string) {
+    return await prisma.plant.findUnique({
+        where: { id }
+    });
+}
+
